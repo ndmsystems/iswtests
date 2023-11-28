@@ -7,16 +7,23 @@ export enum TvOptionType {
   OPERATOR_STB
 }
 
-export class SelectConfigurationOption {
+export class TvOption {
+  readonly page: Page
   readonly path: string
   
+  readonly offTheShelfTv: Locator
+  readonly operatorStb: Locator
+
   readonly back: Locator
   readonly nextButton: Locator
 
-  readonly 
   constructor(page: Page) {
+    this.page = page
     this.path = '/tv-option'
 
+    this.offTheShelfTv = page.getByText('Off the shelf Smart TV or media player (Recommended)')
+    this.operatorStb = page.getByText('Operator-branded IPTV STB with custom setup instructions')
+  
     this.back = page.getByRole('button', { name: 'Back' })
     this.nextButton = page.getByRole('button', { name: 'Next' })
   }

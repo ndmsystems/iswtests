@@ -1,7 +1,9 @@
 
 import { type Locator, type Page } from '@playwright/test';
+import { UnplugModem } from '../ethernet-scenario/unplug-modem';
+import { Pageable } from '../../util/fixtures';
 
-export class Password {
+export class Password implements Pageable {
   readonly page: Page
   readonly path: string
 
@@ -19,8 +21,9 @@ export class Password {
     this.nextButton = page.getByRole('button', { name: 'Next' })
   }
 
-  async next() {
+  async next(unplugModemPage: UnplugModem) {
     await this.nextButton.click()
+    await this.page.waitForURL(new RegExp(unplugModemPage.path))
   }
 }
 

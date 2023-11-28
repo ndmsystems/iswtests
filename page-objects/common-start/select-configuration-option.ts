@@ -2,6 +2,8 @@
 import { type Locator, type Page } from '@playwright/test';
 import { Shared } from '../shared';
 import { DevicePrivacyNotice } from './device-privacy-notice';
+import { Password } from './password';
+import { Pageable } from './../../util/fixtures'
 
 export enum ConnectionType {
   VIA_ETHERNET,
@@ -10,7 +12,7 @@ export enum ConnectionType {
   RESTORE_CONFIGURATION,
 }
 
-export class SelectConfigurationOption {
+export class SelectConfigurationOption implements Pageable {
   readonly page: Page
   readonly path: string
   readonly shared: Shared
@@ -32,8 +34,9 @@ export class SelectConfigurationOption {
     
   }
 
-  async next(devicePrivacyNotice: DevicePrivacyNotice) {
+
+  async next(page: Pageable) {
     await this.nextButton.click()
-    await this.page.waitForURL(new RegExp(devicePrivacyNotice.path))
+    await this.page.waitForURL(new RegExp(page.path))
   }
 }

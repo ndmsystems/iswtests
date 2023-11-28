@@ -2,6 +2,7 @@
 import { type Locator, type Page } from '@playwright/test';
 
 export class UnplugModem {
+  readonly page: Page
   readonly path: string
 
   readonly password: Locator;
@@ -11,6 +12,7 @@ export class UnplugModem {
   readonly nextButton: Locator
 
   constructor(page: Page) {
+    this.page = page
     this.path = '/unplug-modem'
 
     this.back = page.getByRole('button', { name: 'Back' })
