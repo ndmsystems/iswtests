@@ -2,6 +2,7 @@
 import { type Locator, type Page } from '@playwright/test';
 
 export class Password {
+  readonly page: Page
   readonly path: string
 
   readonly password: Locator;
@@ -10,6 +11,7 @@ export class Password {
   readonly nextButton: Locator
 
   constructor(page: Page) {
+    this.page = page
     this.path = '/password'
 
     this.password = page.getByLabel('Password')

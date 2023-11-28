@@ -1,5 +1,6 @@
 
 import { type Locator, type Page } from '@playwright/test';
+import { SelectConfigurationOption } from './select-configuration-option';
 
 export class Welcome {
   readonly page: Page
@@ -16,8 +17,8 @@ export class Welcome {
     this.runWizard = page.getByRole('button', { name: 'Run wizard' })
   }
 
-  async next() {
+  async next(selectConfigurationOptionPage : SelectConfigurationOption) {
     await this.runWizard.click()
-    await this.page.waitForURL('/nextstep')
+    await this.page.waitForURL(new RegExp(selectConfigurationOptionPage.path))
   }
 }
