@@ -1,13 +1,6 @@
 import { expect } from '@playwright/test'
 import { test } from '../util/fixtures'
 
-test.beforeAll(async () => {
-  var exec = require('child_process').exec;
-  exec('curl -v 172.16.99.5:8096/rci/easyconfig/state -d @util/welcome.json', function callback(error, stdout, stderr) {
-    console.log(stdout)
-  });
-});
-
 test('ethernet', async ({ page, request,
     welcomePage, 
     selectConfigurationOptionPage, 

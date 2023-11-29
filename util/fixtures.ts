@@ -11,6 +11,7 @@ import { DigitalCertificates } from '../page-objects/common-end/digital-certific
 import { ProductImprovement } from '../page-objects/common-end/product-improvement'
 import { YourKeeneticCredentials } from '../page-objects/common-end/your-keenetic-credentials'
 import { ShoutIfYouNeedHelp } from '../page-objects/common-end/congratulate'
+import { A } from '../page-objects/a'
 
 export interface Pageable {
   path: string
@@ -29,6 +30,7 @@ interface MyFixtures {
   productImprovementPage: ProductImprovement
   yourKeeneticCredentialsPage: YourKeeneticCredentials
   shoutIfYouNeedHelpPage: ShoutIfYouNeedHelp
+  a: A
 }
 
 export const test = base.extend<MyFixtures>({
@@ -47,22 +49,27 @@ export const test = base.extend<MyFixtures>({
         return
       }
 
-      const text = await response.text()
-
       const json = await response.json()
     
-      if (text.includes('last-change') && json.constructor === Array && 'show' in json[0] && 'last-change' in json[0].show) {
-        console.log('array:', json)
+      if (json.constructor === Array && 'show' in json[0] && 'last-change' in json[0].show) {
+        console.log('Mocking show.last-change.agent to default')
         json[0]['show']['last-change']['agent'] = 'default'
       }
       await route.fulfill({ response, json });
     })
 
     page.on('console', msg => {
-      if (msg.type() === 'error' && !msg.text().includes('JSHandle@object')) {
+      if (msg.type() === 'error') {
         console.log(msg.text())
       }
     })
+
+    // Load initial easyconfig state to device
+    var exec = require('child_process').exec;
+    exec('curl -v 172.16.99.5:8096/rci/easyconfig/state -d @util/welcome.json', function callback(error, stdout, stderr) {
+      console.log(stdout)
+    });
+
     await use(page)
   },
 
@@ -122,8 +129,19 @@ export const test = base.extend<MyFixtures>({
     await use(cred)
   },
 
-  shoutIfYouNeedHelpPage: async ({ page }, use) => {
+  shoutIfYouNeedHelpPage: async ({ page, a }, use) => {
     const shout = new ShoutIfYouNeedHelp(page)
     await use(shout)
+
+    // Reset user password and enable user config after /congratulate page
+    await page.goto(a.path)
+    await page.waitForURL(new RegExp(a.path))
+    await a.send('no user admin password')
+    await a.send('easyconfig no disable')
+  },
+
+  a: async ({ page }, use) => {
+    const aP = new A(page)
+    await use(aP)
   }
 })
