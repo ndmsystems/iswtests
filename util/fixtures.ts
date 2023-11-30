@@ -35,9 +35,6 @@ interface MyFixtures {
 
 export const test = base.extend<MyFixtures>({
   page: async ({ page }, use) => {
-    // Mock the api call before navigating
-    
-
     page.on('console', msg => {
       if (msg.type() === 'error') {
         console.log(msg.text())
