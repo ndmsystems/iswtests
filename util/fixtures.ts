@@ -36,27 +36,7 @@ interface MyFixtures {
 export const test = base.extend<MyFixtures>({
   page: async ({ page }, use) => {
     // Mock the api call before navigating
-    await page.route('/rci/', async route => {
-      if (route.request().method() !== 'POST') {
-        route.continue()
-        return
-      }
-
-      const response = await route.fetch();
-
-      if (!response.ok()) {
-        route.continue()
-        return
-      }
-
-      const json = await response.json()
     
-      if (json.constructor === Array && 'show' in json[0] && 'last-change' in json[0].show) {
-        console.log('Mocking show.last-change.agent to default')
-        json[0]['show']['last-change']['agent'] = 'default'
-      }
-      await route.fulfill({ response, json });
-    })
 
     page.on('console', msg => {
       if (msg.type() === 'error') {
@@ -76,6 +56,25 @@ export const test = base.extend<MyFixtures>({
   welcomePage: async ({ page }, use) => {
     const welcome = new Welcome(page)
     await page.goto(welcome.path)
+
+    let mocked = 0
+    await page.route('/rci/', async route => {
+      if (mocked > 1 || route.request().method() !== 'POST') {
+        route.continue()
+        return
+      }
+
+      const response = await route.fetch();
+      const json = await response.json()
+    
+      if (json.constructor === Array && 'show' in json[0] && 'last-change' in json[0].show) {
+        mocked++
+        console.log('Setting agent to default')
+        json[0]['show']['last-change']['agent'] = 'default'
+      }
+      await route.fulfill({ response, json });
+    })
+
     await use(welcome)
   },
 
