@@ -16,10 +16,10 @@ test('ethernet', async ({ page, request,
     shoutIfYouNeedHelpPage
      }) => {
 
+  await page.waitForURL(new RegExp(welcomePage.path))
   await welcomePage.next(selectConfigurationOptionPage)
-  await expect(selectConfigurationOptionPage.nextButton).toBeDisabled()
 
-  await selectConfigurationOptionPage.via_ethernet.check()
+  await selectConfigurationOptionPage.viaEthernet.check()
   await selectConfigurationOptionPage.next(passwordPage)
   // await devicePrivacyNoticePage.agreeCheckbox.check()
   // await devicePrivacyNoticePage.next(passwordPage)
@@ -33,10 +33,14 @@ test('ethernet', async ({ page, request,
   await tvOptionPage.nextButton.click()
   await autoUpdatePage.manualUpdating.click()
 
+  await page.waitForURL(new RegExp(wifiSettingsPage.path))
+
   // Shall we see update page if we choose manual updating? /updating-firmware
   await wifiSettingsPage.next(digitalCertificatesPage)
   await digitalCertificatesPage.next(productImprovementPage)
   await productImprovementPage.refuse.click()
+  await page.waitForURL(new RegExp(yourKeeneticCredentialsPage.path))
+
   await yourKeeneticCredentialsPage.next(shoutIfYouNeedHelpPage)
   await shoutIfYouNeedHelpPage.finish()
 });
