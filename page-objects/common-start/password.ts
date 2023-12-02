@@ -1,7 +1,7 @@
-
 import { type Locator, type Page } from '@playwright/test';
 import { UnplugModem } from '../ethernet-scenario/unplug-modem';
 import { Pageable } from '../../util/fixtures';
+import { get } from '../../util/readLocale';
 
 export class Password implements Pageable {
   readonly page: Page
@@ -16,14 +16,15 @@ export class Password implements Pageable {
     this.page = page
     this.path = '/password'
 
-    this.password = page.getByLabel('Password')
-    this.back = page.getByRole('button', { name: 'Back' })
-    this.nextButton = page.getByRole('button', { name: 'Next' })
+    this.password = page.getByLabel(get('password'))
+
+    this.back = page.getByRole('button', { name: get('isw.buttons.back') })
+    this.nextButton = page.getByRole('button', { name: get('isw.buttons.next') })
   }
 
-  async next(unplugModemPage: UnplugModem) {
+  async next(page: Pageable) {
     await this.nextButton.click()
-    await this.page.waitForURL(new RegExp(unplugModemPage.path))
+    await this.page.waitForURL(new RegExp(page.path))
   }
 }
 

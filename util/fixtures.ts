@@ -1,4 +1,4 @@
-import { test as base } from '@playwright/test'
+import { Page, test as base } from '@playwright/test'
 import { Welcome } from '../page-objects/common-start/welcome'
 import { SelectConfigurationOption } from '../page-objects/common-start/select-configuration-option'
 import { DevicePrivacyNotice } from '../page-objects/common-start/device-privacy-notice'
@@ -14,6 +14,7 @@ import { ShoutIfYouNeedHelp } from '../page-objects/common-end/congratulate'
 import { A } from '../page-objects/a'
 
 export interface Pageable {
+  page: Page
   path: string
 }
 
@@ -130,10 +131,10 @@ export const test = base.extend<MyFixtures>({
     await use(shout)
 
     // Reset user password and enable user config after /congratulate page
-    await page.goto(a.path)
-    await page.waitForURL(new RegExp(a.path))
-    await a.send('no user admin password')
-    await a.send('easyconfig no disable')
+    // await page.goto(a.path)
+    // await page.waitForURL(new RegExp(a.path))
+    // await a.send('no user admin password')
+    // await a.send('easyconfig no disable')
   },
 
   a: async ({ page }, use) => {

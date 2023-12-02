@@ -1,7 +1,9 @@
 
 import { type Locator, type Page } from '@playwright/test';
+import { Pageable } from '../../util/fixtures';
+import { get } from '../../util/readLocale';
 
-export class TermsAndPrivacy {
+export class TermsAndPrivacy implements Pageable {
   readonly page: Page
   readonly path: string
 
@@ -13,10 +15,13 @@ export class TermsAndPrivacy {
     this.path = '/terms-and-privacy'
 
     this.readAndAgreeCheckbox = page.locator('.mat-checkbox-inner-container')
-    this.accept = page.getByRole('button', { name: 'Accept' })
+
+    // Footer
+    this.accept = page.getByRole('button', { name: get('isw.buttons.accept') })
   }
 
-  async next() {
+  async next(page: Pageable) {
     await this.accept.click()
+    await this.page.waitForURL(new RegExp(page.path))
   }
 }

@@ -1,5 +1,6 @@
 import { expect } from '@playwright/test'
 import { test } from '../util/fixtures'
+import { check } from '../util/check';
 
 test('ethernet', async ({ page, request,
     welcomePage, 
@@ -17,9 +18,10 @@ test('ethernet', async ({ page, request,
      }) => {
 
   await page.waitForURL(new RegExp(welcomePage.path))
-  await welcomePage.next(selectConfigurationOptionPage)
+  await welcomePage.runWizard(selectConfigurationOptionPage)
 
-  await selectConfigurationOptionPage.viaEthernet.check()
+  await check(selectConfigurationOptionPage.viaEthernet)
+
   await selectConfigurationOptionPage.next(passwordPage)
   // await devicePrivacyNoticePage.agreeCheckbox.check()
   // await devicePrivacyNoticePage.next(passwordPage)
