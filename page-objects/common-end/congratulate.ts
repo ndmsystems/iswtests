@@ -1,7 +1,8 @@
 
 import { type Locator, type Page } from '@playwright/test';
+import { Pageable } from '../../util/fixtures';
 
-export class ShoutIfYouNeedHelp {
+export class ShoutIfYouNeedHelp implements Pageable {
   readonly page: Page
   readonly path: string
 

@@ -1,6 +1,5 @@
 
 import { type Locator, type Page } from '@playwright/test';
-import { SelectConfigurationOption } from './select-configuration-option';
 import { get } from '../../util/readLocale';
 import { Pageable } from '../../util/fixtures';
 
