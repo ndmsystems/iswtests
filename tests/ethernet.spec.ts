@@ -1,11 +1,13 @@
-import { expect } from '@playwright/test'
-import { test } from '../util/fixtures'
+import { expect } from '@playwright/test';
 import { check } from '../util/check';
+import { test } from '../util/fixtures';
 
 test('ethernet', async ({ page, request,
     welcomePage, 
     selectConfigurationOptionPage, 
     devicePrivacyNoticePage,
+    selectCountryOrRegionPage,
+    termsAndPrivacyPage,
     passwordPage,
     unplugModemPage,
     tvOptionPage,
@@ -17,19 +19,76 @@ test('ethernet', async ({ page, request,
     shoutIfYouNeedHelpPage
      }) => {
 
+
+  let selectCountry = false
+  let dpn = false
+
+  await page.route('/rci/', async route => {
+    if (route.request().method() !== 'POST') {
+      route.continue()
+      return
+    }
+
+    const response = await route.fetch();
+
+    if (!response.ok()) {
+      route.continue()
+      return
+    }
+
+    const json = await response.json()
+  
+    if (json.constructor === Array && 'show' in json[0] && 'last-change' in json[0].show) {
+      let root = json[0]['show']['last-change']
+      console.log(root)
+      if ('dpn-status' in root) {
+        const dpnNode = root['dpn-status']
+        console.log('DPN ', dpnNode)
+    
+        if ('select-country' in dpnNode) {
+          console.log('Need to choose the country')
+          selectCountry = true
+        }
+        else if ('accepted' in dpnNode && 'version' in dpnNode) {
+          dpn = dpnNode.version < dpnNode.accepted
+        }
+        else {
+          // DPN node is there
+          dpn = true
+        }
+      } else {
+        dpn = false
+      }
+    }
+    await route.fulfill({ response, json });
+  })
+
   await page.waitForURL(new RegExp(welcomePage.path))
   await welcomePage.runWizard(selectConfigurationOptionPage)
 
   await check(selectConfigurationOptionPage.viaEthernet)
 
-  await selectConfigurationOptionPage.next(passwordPage)
-  // await devicePrivacyNoticePage.agreeCheckbox.check()
-  // await devicePrivacyNoticePage.next(passwordPage)
+  if (selectCountry) {
+    await selectConfigurationOptionPage.next(selectCountryOrRegionPage)
+    await selectCountryOrRegionPage.next(termsAndPrivacyPage)
+  } else {
+    await selectConfigurationOptionPage.next(termsAndPrivacyPage)
+  }
 
-  await expect(passwordPage.nextButton).toBeDisabled()
+  await termsAndPrivacyPage.readAndAgreeCheckbox.check()
+
+  if (dpn) {
+    await termsAndPrivacyPage.next(devicePrivacyNoticePage)
+    await devicePrivacyNoticePage.agreeCheckbox.check()
+    await devicePrivacyNoticePage.next(passwordPage)
+  } else {
+    await termsAndPrivacyPage.next(passwordPage)
+  }
+
   await passwordPage.password.fill('1234')
   await passwordPage.next(unplugModemPage)
 
+  // Logic is different here based on whether DUT has 2.5G port
   await unplugModemPage.iHaveNoModem.click()
   await tvOptionPage.offTheShelfTv.check()
   await tvOptionPage.nextButton.click()

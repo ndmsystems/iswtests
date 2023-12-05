@@ -13,7 +13,7 @@ export class DevicePrivacyNotice implements Pageable {
 
   constructor(page: Page) {
     this.page = page
-    this.path = '/terms-and-privacy'
+    this.path = '/accept-device-privacy-notice'
 
     // 'By checking this box, I confirm that I have read and agree to the terms of the E'
     this.agreeCheckbox = page.getByText(get('dpn.not-accepted.acceptance'))

@@ -1,7 +1,9 @@
 import { Page, test as base } from '@playwright/test'
 import { Welcome } from '../page-objects/common-start/welcome'
 import { SelectConfigurationOption } from '../page-objects/common-start/select-configuration-option'
+import { SelectCountryOrRegion } from '../page-objects/common-start/select-country-or-region'
 import { DevicePrivacyNotice } from '../page-objects/common-start/device-privacy-notice'
+import { TermsAndPrivacy } from '../page-objects/common-start/terms-and-privacy'
 import { Password } from '../page-objects/common-start/password'
 import { UnplugModem } from '../page-objects/ethernet-scenario/unplug-modem'
 import { TvOption } from '../page-objects/ethernet-scenario/tv-option'
@@ -22,6 +24,8 @@ interface MyFixtures {
   welcomePage: Welcome
   selectConfigurationOptionPage: SelectConfigurationOption
   devicePrivacyNoticePage: DevicePrivacyNotice
+  selectCountryOrRegionPage: SelectCountryOrRegion
+  termsAndPrivacyPage: TermsAndPrivacy
   passwordPage: Password
   unplugModemPage: UnplugModem
   tvOptionPage: TvOption
@@ -55,23 +59,23 @@ export const test = base.extend<MyFixtures>({
     const welcome = new Welcome(page)
     await page.goto(welcome.path)
 
-    let mocked = 0
-    await page.route('/rci/', async route => {
-      if (mocked > 1 || route.request().method() !== 'POST') {
-        route.continue()
-        return
-      }
+    // let mocked = 0
+    // await page.route('/rci/', async route => {
+    //   if (mocked > 1 || route.request().method() !== 'POST') {
+    //     route.continue()
+    //     return
+    //   }
 
-      const response = await route.fetch();
-      const json = await response.json()
+    //   const response = await route.fetch();
+    //   const json = await response.json()
     
-      if (json.constructor === Array && 'show' in json[0] && 'last-change' in json[0].show) {
-        mocked++
-        console.log('Setting agent to default')
-        json[0]['show']['last-change']['agent'] = 'default'
-      }
-      await route.fulfill({ response, json });
-    })
+    //   if (json.constructor === Array && 'show' in json[0] && 'last-change' in json[0].show) {
+    //     mocked++
+    //     console.log('Setting agent to default')
+    //     json[0]['show']['last-change']['agent'] = 'default'
+    //   }
+    //   await route.fulfill({ response, json });
+    // })
 
     await use(welcome)
   },
@@ -84,6 +88,16 @@ export const test = base.extend<MyFixtures>({
   devicePrivacyNoticePage: async ({ page }, use) => {
     const dpn = new DevicePrivacyNotice(page)
     await use(dpn)
+  },
+
+  selectCountryOrRegionPage: async ({ page }, use) => {
+    const scor = new SelectCountryOrRegion(page)
+    await use(scor)
+  },
+
+  termsAndPrivacyPage: async ({ page }, use) => {
+    const terms = new TermsAndPrivacy(page)
+    await use(terms)
   },
 
   passwordPage: async ({ page }, use) => {
