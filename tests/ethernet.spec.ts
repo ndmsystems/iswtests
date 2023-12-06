@@ -19,9 +19,11 @@ test('ethernet', async ({ page, request,
     shoutIfYouNeedHelpPage
      }) => {
 
-
   let selectCountry = false
   let dpn = false
+
+  const has2_5G = (await (await request.get(`/ndmConstants.js`, {})).text()).includes('"maxSpeed": 2500')
+  console.log('This device has a 2.5G port', has2_5G)
 
   await page.route('/rci/', async route => {
     if (route.request().method() !== 'POST') {
@@ -56,8 +58,6 @@ test('ethernet', async ({ page, request,
           // DPN node is there
           dpn = true
         }
-      } else {
-        dpn = false
       }
     }
     await route.fulfill({ response, json });
@@ -86,12 +86,16 @@ test('ethernet', async ({ page, request,
   }
 
   await passwordPage.password.fill('1234')
-  await passwordPage.next(unplugModemPage)
 
-  // Logic is different here based on whether DUT has 2.5G port
-  await unplugModemPage.iHaveNoModem.click()
+  if (!has2_5G) {
+    await passwordPage.next(unplugModemPage)
+    await unplugModemPage.iHaveNoModem.click()
+  } else {
+   
+  }
+
   await tvOptionPage.offTheShelfTv.check()
-  await tvOptionPage.nextButton.click()
+  await tvOptionPage.next(autoUpdatePage)
   await autoUpdatePage.manualUpdating.click()
 
   await page.waitForURL(new RegExp(wifiSettingsPage.path))
