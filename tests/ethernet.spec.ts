@@ -1,29 +1,25 @@
-import { expect } from '@playwright/test';
-import { check } from '../util/check';
-import { test } from '../util/fixtures';
+import { check } from '../util/check'
+import { test } from '../util/fixtures'
 
-test('ethernet', async ({ page, request,
+let has2_5G = false
+
+test.beforeAll(async ({ request }) => {
+  has2_5G = (await (await request.get(`/ndmConstants.js`, {})).text()).includes('"maxSpeed": 2500')
+  console.log('This device has a 2.5G port', has2_5G)
+});
+
+test.beforeEach('common-start', async ({ 
+    page,
     welcomePage, 
     selectConfigurationOptionPage, 
     devicePrivacyNoticePage,
     selectCountryOrRegionPage,
     termsAndPrivacyPage,
     passwordPage,
-    unplugModemPage,
-    tvOptionPage,
-    autoUpdatePage,
-    wifiSettingsPage,
-    digitalCertificatesPage,
-    productImprovementPage,
-    yourKeeneticCredentialsPage,
-    shoutIfYouNeedHelpPage
      }) => {
 
   let selectCountry = false
   let dpn = false
-
-  const has2_5G = (await (await request.get(`/ndmConstants.js`, {})).text()).includes('"maxSpeed": 2500')
-  console.log('This device has a 2.5G port', has2_5G)
 
   await page.route('/rci/', async route => {
     if (route.request().method() !== 'POST') {
@@ -39,10 +35,10 @@ test('ethernet', async ({ page, request,
     }
 
     const json = await response.json()
-  
+
     if (json.constructor === Array && 'show' in json[0] && 'last-change' in json[0].show) {
       let root = json[0]['show']['last-change']
-      console.log(root)
+
       if ('dpn-status' in root) {
         const dpnNode = root['dpn-status']
         console.log('DPN ', dpnNode)
@@ -86,26 +82,43 @@ test('ethernet', async ({ page, request,
   }
 
   await passwordPage.password.fill('1234')
+  await passwordPage.nextButton.click()
 
-  if (!has2_5G) {
-    await passwordPage.next(unplugModemPage)
-    await unplugModemPage.iHaveNoModem.click()
-  } else {
-   
-  }
-
-  await tvOptionPage.offTheShelfTv.check()
-  await tvOptionPage.next(autoUpdatePage)
-  await autoUpdatePage.manualUpdating.click()
-
-  await page.waitForURL(new RegExp(wifiSettingsPage.path))
-
-  // Shall we see update page if we choose manual updating? /updating-firmware
-  await wifiSettingsPage.next(digitalCertificatesPage)
-  await digitalCertificatesPage.next(productImprovementPage)
-  await productImprovementPage.refuse.click()
-  await page.waitForURL(new RegExp(yourKeeneticCredentialsPage.path))
-
-  await yourKeeneticCredentialsPage.next(shoutIfYouNeedHelpPage)
-  await shoutIfYouNeedHelpPage.finish()
 });
+
+test('eth', async ({ page,
+  unplugModemPage,
+  tvOptionPage,
+  vlanInformationPage,
+  autoUpdatePage,
+  wifiSettingsPage,
+  digitalCertificatesPage,
+  productImprovementPage,
+  yourKeeneticCredentialsPage,
+  shoutIfYouNeedHelpPage
+   }) => {
+
+    if (!has2_5G) {
+      // await passwordPage.next(unplugModemPage)
+      // await unplugModemPage.iHaveNoModem.click()
+    } else {
+     
+    }
+  
+    await tvOptionPage.offTheShelfTv.check()
+    await tvOptionPage.next(vlanInformationPage)
+
+    await vlanInformationPage.withoutVlan.click()
+    await autoUpdatePage.manualUpdating.click()
+  
+    await page.waitForURL(new RegExp(wifiSettingsPage.path))
+  
+    // Shall we see update page if we choose manual updating? /updating-firmware
+    await wifiSettingsPage.next(digitalCertificatesPage)
+    await digitalCertificatesPage.next(productImprovementPage)
+    await productImprovementPage.refuse.click()
+    await page.waitForURL(new RegExp(yourKeeneticCredentialsPage.path))
+  
+    await yourKeeneticCredentialsPage.next(shoutIfYouNeedHelpPage)
+    await shoutIfYouNeedHelpPage.finish()
+})

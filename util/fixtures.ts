@@ -7,6 +7,7 @@ import { TermsAndPrivacy } from '../page-objects/common-start/terms-and-privacy'
 import { Password } from '../page-objects/common-start/password'
 import { UnplugModem } from '../page-objects/ethernet-scenario/unplug-modem'
 import { TvOption } from '../page-objects/ethernet-scenario/tv-option'
+import { iptvVlanSetup } from '../page-objects/ethernet-scenario/iptv-vlan-setup'
 import { AutoUpdate } from '../page-objects/common-end/auto-update'
 import { WiFiNetworkSettings } from '../page-objects/common-end/wifi-settings'
 import { DigitalCertificates } from '../page-objects/common-end/digital-certificates'
@@ -29,6 +30,7 @@ interface MyFixtures {
   passwordPage: Password
   unplugModemPage: UnplugModem
   tvOptionPage: TvOption
+  vlanInformationPage: iptvVlanSetup
   autoUpdatePage: AutoUpdate
   wifiSettingsPage: WiFiNetworkSettings
   digitalCertificatesPage: DigitalCertificates
@@ -48,9 +50,40 @@ export const test = base.extend<MyFixtures>({
 
     // Load initial easyconfig state to device
     var exec = require('child_process').exec;
-    exec('curl -v 172.16.99.5:8096/rci/easyconfig/state -d @util/welcome.json', function callback(error, stdout, stderr) {
+    exec(`curl -v ${process.env.HOST}/rci/easyconfig/state -d @util/welcome.json`, function callback(_err, stdout) {
       console.log(stdout)
     });
+
+   
+    let mocked = 0
+    await page.route('/rci/', async route => {
+    console.log('main')
+
+      if (route.request().method() !== 'POST') {
+        route.continue()
+        return
+      }
+
+      const response = await route.fetch();
+
+      if (!response.ok()) {
+        route.continue()
+        return
+      }
+
+      const json = await response.json()
+
+      if (json.constructor === Array && 'show' in json[0] && 'last-change' in json[0].show) {
+        let root = json[0]['show']['last-change']
+
+        if (mocked < 5) {
+          console.log('Setting agent to default')
+          json[0]['show']['last-change']['agent'] = 'default'
+          mocked++
+        }
+      }
+      await route.fulfill({ response, json });
+    })
 
     await use(page)
   },
@@ -58,24 +91,6 @@ export const test = base.extend<MyFixtures>({
   welcomePage: async ({ page }, use) => {
     const welcome = new Welcome(page)
     await page.goto(welcome.path)
-
-    // let mocked = 0
-    // await page.route('/rci/', async route => {
-    //   if (mocked > 1 || route.request().method() !== 'POST') {
-    //     route.continue()
-    //     return
-    //   }
-
-    //   const response = await route.fetch();
-    //   const json = await response.json()
-    
-    //   if (json.constructor === Array && 'show' in json[0] && 'last-change' in json[0].show) {
-    //     mocked++
-    //     console.log('Setting agent to default')
-    //     json[0]['show']['last-change']['agent'] = 'default'
-    //   }
-    //   await route.fulfill({ response, json });
-    // })
 
     await use(welcome)
   },
@@ -113,6 +128,11 @@ export const test = base.extend<MyFixtures>({
   tvOptionPage: async ({ page }, use) => {
     const tv = new TvOption(page)
     await use(tv)
+  },
+
+  vlanInformationPage: async ({ page }, use) => {
+    const vip = new iptvVlanSetup(page)
+    await use(vip)
   },
 
   autoUpdatePage: async ({ page }, use) => {

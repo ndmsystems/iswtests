@@ -1,7 +1,7 @@
 import fs from 'fs'
 import path from 'path'
 
-const localeEnFilePath = path.join(__dirname, `../localization/locale.en.json`)
+const localeEnFilePath = path.join(__dirname, '../localization/device.en.json')
 const enDict = JSON.parse(fs.readFileSync(localeEnFilePath, 'utf8'))
 
 export const get = (key: string): any => {

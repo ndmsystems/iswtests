@@ -11,3 +11,6 @@ tests/screenshots/
 .env
 
 tmp
+
+util/welcome.json
+localization/device.en.json
