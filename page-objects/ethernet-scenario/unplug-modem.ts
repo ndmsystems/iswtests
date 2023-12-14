@@ -12,7 +12,7 @@ export class UnplugModem extends Base implements Pageable {
   readonly iHaveNoModem: Locator
 
   constructor(page: Page) {
-    super(page)
+    super()
 
     this.page = page
     this.path = '/unplug-modem'

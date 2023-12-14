@@ -1,5 +1,4 @@
 import { expect, type Locator, type Page } from '@playwright/test';
-import { Password } from './password';
 import { get } from '../../util/readLocale';
 import { Pageable } from '../../util/fixtures';
 

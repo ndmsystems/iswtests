@@ -5,18 +5,19 @@ let has2_5G = false
 
 test.beforeAll(async ({ request }) => {
   has2_5G = (await (await request.get(`/ndmConstants.js`, {})).text()).includes('"maxSpeed": 2500')
-  console.log('This device has a 2.5G port', has2_5G)
+  console.log(`This device ${has2_5G ? 'has' : 'doesn\'t have'} a 2.5G port`)
 });
 
+
 test.beforeEach('common-start', async ({ 
-    page,
-    welcomePage, 
-    selectConfigurationOptionPage, 
-    devicePrivacyNoticePage,
-    selectCountryOrRegionPage,
-    termsAndPrivacyPage,
-    passwordPage,
-     }) => {
+  page,
+  welcomePage, 
+  selectConfigurationOptionPage, 
+  devicePrivacyNoticePage,
+  selectCountryOrRegionPage,
+  termsAndPrivacyPage,
+  passwordPage,
+   }) => {
 
   let selectCountry = false
   let dpn = false
@@ -59,32 +60,33 @@ test.beforeEach('common-start', async ({
     await route.fulfill({ response, json });
   })
 
-  await page.waitForURL(new RegExp(welcomePage.path))
-  await welcomePage.runWizard(selectConfigurationOptionPage)
+await page.waitForURL(new RegExp(welcomePage.path))
+await welcomePage.runWizard(selectConfigurationOptionPage)
 
-  await check(selectConfigurationOptionPage.viaEthernet)
+await check(selectConfigurationOptionPage.viaEthernet)
 
-  if (selectCountry) {
-    await selectConfigurationOptionPage.next(selectCountryOrRegionPage)
-    await selectCountryOrRegionPage.next(termsAndPrivacyPage)
-  } else {
-    await selectConfigurationOptionPage.next(termsAndPrivacyPage)
-  }
+if (selectCountry) {
+  await selectConfigurationOptionPage.next(selectCountryOrRegionPage)
+  await selectCountryOrRegionPage.next(termsAndPrivacyPage)
+} else {
+  await selectConfigurationOptionPage.next(termsAndPrivacyPage)
+}
 
-  await termsAndPrivacyPage.readAndAgreeCheckbox.check()
+await termsAndPrivacyPage.readAndAgreeCheckbox.check()
 
-  if (dpn) {
-    await termsAndPrivacyPage.accept(devicePrivacyNoticePage)
-    await devicePrivacyNoticePage.agree.check()
-    await devicePrivacyNoticePage.accept(passwordPage)
-  } else {
-    await termsAndPrivacyPage.accept(passwordPage)
-  }
+if (dpn) {
+  await termsAndPrivacyPage.accept(devicePrivacyNoticePage)
+  await devicePrivacyNoticePage.agree.check()
+  await devicePrivacyNoticePage.accept(passwordPage)
+} else {
+  await termsAndPrivacyPage.accept(passwordPage)
+}
 
-  await passwordPage.password.fill('1234')
-  await passwordPage.nextButton.click()
+await passwordPage.password.fill('1234')
+await passwordPage.nextButton.click()
 
-});
+})
+
 
 test('eth', async ({ page,
   unplugModemPage,

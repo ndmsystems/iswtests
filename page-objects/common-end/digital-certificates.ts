@@ -9,7 +9,7 @@ export class DigitalCertificates extends Base implements Pageable {
   readonly path: string
 
   constructor(page: Page) {
-    super(page)
+    super()
 
     this.page = page
     this.path = '/digital-certificates'

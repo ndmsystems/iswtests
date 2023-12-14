@@ -12,7 +12,7 @@ export class TvOption extends Base implements Pageable {
   readonly operatorStb: Locator
 
   constructor(page: Page) {
-    super(page)
+    super()
 
     this.page = page
     this.path = '/tv-option'

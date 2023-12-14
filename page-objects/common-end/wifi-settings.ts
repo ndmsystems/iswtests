@@ -11,7 +11,7 @@ export class WiFiNetworkSettings extends Base implements Pageable {
   readonly password: Locator
 
   constructor(page: Page) {
-    super(page)
+    super()
 
     this.page = page
     this.path = '/wifi-settings'

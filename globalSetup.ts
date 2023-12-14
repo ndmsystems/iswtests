@@ -8,15 +8,11 @@ async function globalSetup(_config: FullConfig ) {
   
   console.log(process.env)
 
-  var exec = require('child_process').exec;
-  exec(`curl ${process.env.HOST}/language/locale.en.json`, function callback(_err, stdout) {
-    writeFileSync(join(__dirname, 'localization/device.en.json'), stdout, {
-      flag: 'w',
-    });
-  });
+  var exec = require('child_process').execSync;
+  let dict = exec(`curl ${process.env.HOST}/language/locale.en.json`)
 
-  // Wait until file is actually saved
-  await new Promise(f => setTimeout(f, 500));
+  writeFileSync(join(__dirname, 'localization/device.en.json'), dict.toString('utf8'), { flag: 'w' })
+
 
   // exec(`curl ${process.env.HOST}/rci/easyconfig/state`, function callback(_err, stdout) {
   //   let obj = JSON.parse(stdout)

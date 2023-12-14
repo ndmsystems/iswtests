@@ -14,7 +14,7 @@ export class iptvVlanSetup extends Base implements Pageable {
   readonly withoutVlan: Locator
 
   constructor(page: Page) {
-    super(page)
+    super()
 
     this.page = page
     this.path = '/vlan-information'

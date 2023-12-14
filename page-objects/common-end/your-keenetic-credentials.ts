@@ -12,7 +12,7 @@ export class YourKeeneticCredentials extends Base implements Pageable {
   readonly print: Locator
 
   constructor(page: Page) {
-    super(page)
+    super()
 
     this.page = page
     this.path = '/your-keenetic-credentials'

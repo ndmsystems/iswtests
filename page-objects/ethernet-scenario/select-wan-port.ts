@@ -10,7 +10,7 @@ export class SelectWanPort extends Base implements Pageable {
   readonly port: Locator
 
   constructor(page: Page) {
-    super(page)
+    super()
 
     this.page = page
     this.path = '/select-2_5G-wan-port'

@@ -38,7 +38,7 @@ export class SelectConfigurationOption extends Base implements Pageable {
   readonly exitWizard: Locator
 
   constructor(page: Page) {
-    super(page)
+    super()
 
     this.page = page
     this.path = '/select-configuration-option'
