@@ -1,24 +1,17 @@
 
 import { type Locator, type Page } from '@playwright/test';
 import { ProductImprovement } from './product-improvement';
+import { Base } from '../base';
+import { Pageable } from '../../util/fixtures';
 
-export class DigitalCertificates {
+export class DigitalCertificates extends Base implements Pageable {
   readonly page: Page
   readonly path: string
 
-  readonly back: Locator;
-  readonly nextButton: Locator
-
   constructor(page: Page) {
+    super(page)
+
     this.page = page
     this.path = '/digital-certificates'
-
-    this.back = page.getByRole('button', { name: 'Back' })
-    this.nextButton = page.getByRole('button', { name: 'Next' })
-  }
-
-  async next(productImprovementPage: ProductImprovement) {
-    await this.nextButton.click()
-    await this.page.waitForURL(new RegExp(productImprovementPage.path))
   }
 }

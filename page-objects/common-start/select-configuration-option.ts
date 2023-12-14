@@ -2,6 +2,7 @@
 import { type Locator, type Page } from '@playwright/test';
 import { Pageable } from './../../util/fixtures'
 import { get } from '../../util/readLocale';
+import { Base } from '../base';
 
 enum Type {
   DEVICES_WITHOUT_VIA_USB_MODEM_OPTION,
@@ -24,7 +25,7 @@ enum Type {
   BUDDY_MESH
 }
 
-export class SelectConfigurationOption implements Pageable {
+export class SelectConfigurationOption extends Base implements Pageable {
   readonly page: Page
   readonly path: string
 
@@ -34,11 +35,11 @@ export class SelectConfigurationOption implements Pageable {
   readonly viaUsbModem: Locator
   readonly switchToExtender: Locator
 
-  readonly back: Locator
-  readonly nextButton: Locator
   readonly exitWizard: Locator
 
   constructor(page: Page) {
+    super(page)
+
     this.page = page
     this.path = '/select-configuration-option'
 
@@ -48,14 +49,6 @@ export class SelectConfigurationOption implements Pageable {
     this.viaUsbModem = page.getByText(`input[value=${Type[Type.VIA_USB_MODEM]}]`)
     this.switchToExtender = page.getByText(`input[value=${Type[Type.SWITCH_TO_EXTENDER]}]`)
    
-    this.back = page.getByRole('button', { name: get('isw.buttons.back') })
-    this.nextButton = page.getByRole('button', { name: get('isw.buttons.next') })
     this.exitWizard = page.getByRole('button', { name: get('isw.buttons.exit-wizard') })
-    
-  }
-
-  async next(page: Pageable) {
-    await this.nextButton.click()
-    await this.page.waitForURL(new RegExp(page.path))
   }
 }

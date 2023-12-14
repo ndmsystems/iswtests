@@ -74,11 +74,11 @@ test.beforeEach('common-start', async ({
   await termsAndPrivacyPage.readAndAgreeCheckbox.check()
 
   if (dpn) {
-    await termsAndPrivacyPage.next(devicePrivacyNoticePage)
-    await devicePrivacyNoticePage.agreeCheckbox.check()
-    await devicePrivacyNoticePage.next(passwordPage)
+    await termsAndPrivacyPage.accept(devicePrivacyNoticePage)
+    await devicePrivacyNoticePage.agree.check()
+    await devicePrivacyNoticePage.accept(passwordPage)
   } else {
-    await termsAndPrivacyPage.next(passwordPage)
+    await termsAndPrivacyPage.accept(passwordPage)
   }
 
   await passwordPage.password.fill('1234')

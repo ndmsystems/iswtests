@@ -7,7 +7,7 @@ export class DevicePrivacyNotice implements Pageable {
   readonly page: Page
   readonly path: string
 
-  readonly agreeCheckbox: Locator
+  readonly agree: Locator
   readonly acceptButton: Locator
   readonly baseUrl: string
 
@@ -16,13 +16,13 @@ export class DevicePrivacyNotice implements Pageable {
     this.path = '/accept-device-privacy-notice'
 
     // 'By checking this box, I confirm that I have read and agree to the terms of the E'
-    this.agreeCheckbox = page.getByText(get('dpn.not-accepted.acceptance'))
+    this.agree = page.getByText(get('dpn.not-accepted.acceptance'))
     
     // Footer
     this.acceptButton = page.getByRole('button', { name: get('dpn.agree') })
   }
 
-  async next(page: Pageable) {
+  async accept(page: Pageable) {
     await this.acceptButton.click()
     expect (await this.page.waitForURL(new RegExp(page.path)))
   }

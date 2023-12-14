@@ -1,30 +1,22 @@
 
 import { type Locator, type Page } from '@playwright/test';
-import { DigitalCertificates } from './digital-certificates';
+import { Pageable } from '../../util/fixtures';
+import { Base } from '../base';
 
-export class WiFiNetworkSettings {
+export class WiFiNetworkSettings extends Base implements Pageable {
   readonly page: Page
   readonly path: string
 
   readonly ssid: Locator
   readonly password: Locator
 
-  readonly back: Locator;
-  readonly nextButton: Locator
-
   constructor(page: Page) {
+    super(page)
+
     this.page = page
     this.path = '/wifi-settings'
 
     this.ssid = page.getByLabel('Network name (SSID)')
     this.password = page.getByLabel('Password')
-
-    this.back = page.getByRole('button', { name: 'Back' })
-    this.nextButton = page.getByRole('button', { name: 'Next' })
-  }
-
-  async next(digitalCertificatesPage: DigitalCertificates) {
-    await this.nextButton.click()
-    await this.page.waitForURL(new RegExp(digitalCertificatesPage.path))
   }
 }

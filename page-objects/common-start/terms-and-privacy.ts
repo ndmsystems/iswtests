@@ -8,7 +8,7 @@ export class TermsAndPrivacy implements Pageable {
   readonly path: string
 
   readonly readAndAgreeCheckbox: Locator;
-  readonly accept: Locator;
+  readonly acceptButton: Locator;
   
   constructor(page: Page) {
     this.page = page
@@ -17,11 +17,11 @@ export class TermsAndPrivacy implements Pageable {
     this.readAndAgreeCheckbox = page.locator('.mat-checkbox-inner-container')
 
     // Footer
-    this.accept = page.getByRole('button', { name: get('isw.buttons.accept') })
+    this.acceptButton = page.getByRole('button', { name: get('isw.buttons.accept') })
   }
 
-  async next(page: Pageable) {
-    await this.accept.click()
+  async accept(page: Pageable) {
+    await this.acceptButton.click()
     await this.page.waitForURL(new RegExp(page.path))
   }
 }

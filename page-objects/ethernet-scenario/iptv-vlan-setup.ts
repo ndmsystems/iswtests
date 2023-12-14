@@ -2,8 +2,9 @@
 import { type Locator, type Page } from '@playwright/test';
 import { Pageable } from './../../util/fixtures'
 import { get } from '../../util/readLocale';
+import { Base } from '../base';
 
-export class iptvVlanSetup implements Pageable {
+export class iptvVlanSetup extends Base implements Pageable {
   readonly page: Page
   readonly path: string
 
@@ -11,9 +12,10 @@ export class iptvVlanSetup implements Pageable {
 
   readonly back: Locator
   readonly withoutVlan: Locator
-  readonly nextButton: Locator
 
   constructor(page: Page) {
+    super(page)
+
     this.page = page
     this.path = '/vlan-information'
 
@@ -21,11 +23,5 @@ export class iptvVlanSetup implements Pageable {
 
     this.back = page.getByRole('button', { name: get('isw.buttons.back') })
     this.withoutVlan = page.getByRole('button', { name: get('isw.vlan-setup.without-vlan') })
-    this.nextButton = page.getByRole('button', { name: get('isw.buttons.next') })
-  }
-
-  async next(page: Pageable) {
-    await this.nextButton.click()
-    await this.page.waitForURL(new RegExp(page.path))
   }
 }
