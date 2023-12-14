@@ -15,6 +15,9 @@ async function globalSetup(_config: FullConfig ) {
     });
   });
 
+  // Wait until file is actually saved
+  await new Promise(f => setTimeout(f, 500));
+
   // exec(`curl ${process.env.HOST}/rci/easyconfig/state`, function callback(_err, stdout) {
   //   let obj = JSON.parse(stdout)
   //   let value = JSON.parse(obj.value)
