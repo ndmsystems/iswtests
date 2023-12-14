@@ -19,7 +19,7 @@ export default defineConfig({
     ['line'],
     ['html', 
     { open: process.env.CI ? 'never': 'always',
-      outputFolder: process.env.CI ? '../FitNesseRoot/files/testResults/playwright-report' : 'playwright-report'}
+      outputFolder: process.env.CI ? `../FitNesseRoot/files/testResults/playwright/${process.env.STARTED_AT}` : 'playwright-report'}
   ]
   ],
   /* Shared settings for all the projects below. See https://playwright.dev/docs/api/class-testoptions. */
