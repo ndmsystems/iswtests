@@ -93,7 +93,7 @@ test.afterEach('common-end', async ({
   digitalCertificatesPage,
   productImprovementPage,
   yourKeeneticCredentialsPage,
-  congratulate: shoutIfYouNeedHelpPage,
+  congratulate,
   a
    }) => {
     await autoUpdatePage.manualUpdating.click()
@@ -103,8 +103,8 @@ test.afterEach('common-end', async ({
     await digitalCertificatesPage.next(productImprovementPage)
     await productImprovementPage.refuse.click()
   
-    await yourKeeneticCredentialsPage.next(shoutIfYouNeedHelpPage)
-    await shoutIfYouNeedHelpPage.finish()
+    await yourKeeneticCredentialsPage.next(congratulate)
+    await congratulate.finish()
 
     await page.goto(a.path)
     await a.send('system configuration factory-reset')
