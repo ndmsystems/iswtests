@@ -13,7 +13,7 @@ import { WiFiNetworkSettings } from '../page-objects/common-end/wifi-settings'
 import { DigitalCertificates } from '../page-objects/common-end/digital-certificates'
 import { ProductImprovement } from '../page-objects/common-end/product-improvement'
 import { YourKeeneticCredentials } from '../page-objects/common-end/your-keenetic-credentials'
-import { ShoutIfYouNeedHelp } from '../page-objects/common-end/congratulate'
+import { Congratulate } from '../page-objects/common-end/congratulate'
 import { A } from '../page-objects/a'
 
 export interface Pageable {
@@ -36,7 +36,7 @@ interface MyFixtures {
   digitalCertificatesPage: DigitalCertificates
   productImprovementPage: ProductImprovement
   yourKeeneticCredentialsPage: YourKeeneticCredentials
-  shoutIfYouNeedHelpPage: ShoutIfYouNeedHelp
+  congratulate: Congratulate
   a: A
 }
 
@@ -160,8 +160,8 @@ export const test = base.extend<MyFixtures>({
     await use(cred)
   },
 
-  shoutIfYouNeedHelpPage: async ({ page, a }, use) => {
-    const shout = new ShoutIfYouNeedHelp(page)
+  congratulate: async ({ page, a }, use) => {
+    const shout = new Congratulate(page)
     await use(shout)
 
     // Reset user password and enable user config after /congratulate page

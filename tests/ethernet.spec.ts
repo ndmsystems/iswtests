@@ -93,23 +93,25 @@ test.afterEach('common-end', async ({
   digitalCertificatesPage,
   productImprovementPage,
   yourKeeneticCredentialsPage,
-  shoutIfYouNeedHelpPage
+  congratulate: shoutIfYouNeedHelpPage,
+  a
    }) => {
     await autoUpdatePage.manualUpdating.click()
-  
-    await page.waitForURL(new RegExp(wifiSettingsPage.path))
   
     // Shall we see update page if we choose manual updating? /updating-firmware
     await wifiSettingsPage.next(digitalCertificatesPage)
     await digitalCertificatesPage.next(productImprovementPage)
     await productImprovementPage.refuse.click()
-    await page.waitForURL(new RegExp(yourKeeneticCredentialsPage.path))
   
     await yourKeeneticCredentialsPage.next(shoutIfYouNeedHelpPage)
     await shoutIfYouNeedHelpPage.finish()
+
+    await page.goto(a.path)
+    await a.send('system configuration factory-reset')
+    // Device will now reboot
 })
 
-test('ethernet', async ({ unplugModemPage, tvOptionPage, vlanInformationPage }) => {
+test('WizardEthNoModemNoStbNoVlanNoVlanIptvWifiDef', async ({ unplugModemPage, tvOptionPage, vlanInformationPage }) => {
   await tvOptionPage.offTheShelfTv.check()
   await tvOptionPage.next(vlanInformationPage)
   await vlanInformationPage.withoutVlan.click()
