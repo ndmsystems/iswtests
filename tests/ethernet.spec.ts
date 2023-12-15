@@ -1,4 +1,5 @@
 import { check } from '../util/check'
+import { easyConfig } from '../util/easyconfig';
 import { test } from '../util/fixtures'
 
 let has2_5G = false
@@ -106,11 +107,15 @@ test('eth', async ({ page,
     } else {
      
     }
-  
+
     await tvOptionPage.offTheShelfTv.check()
     await tvOptionPage.next(vlanInformationPage)
-
     await vlanInformationPage.withoutVlan.click()
+
+    if ((await easyConfig()).ethernetModemScenarioSelected) {
+      await unplugModemPage.iHaveNoModem.click()
+    }
+
     await autoUpdatePage.manualUpdating.click()
   
     await page.waitForURL(new RegExp(wifiSettingsPage.path))

@@ -6,8 +6,6 @@ import { join } from 'path';
 async function globalSetup(_config: FullConfig ) {
   dotenv.config()
   
-  console.log(process.env)
-
   var exec = require('child_process').execSync;
   let dict = exec(`curl ${process.env.HOST}/language/locale.en.json`)
 

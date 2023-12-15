@@ -48,42 +48,42 @@ export const test = base.extend<MyFixtures>({
       }
     })
 
-    // Load initial easyconfig state to device
-    var exec = require('child_process').exec;
-    exec(`curl -v ${process.env.HOST}/rci/easyconfig/state -d @util/welcome.json`, function callback(_err, stdout) {
-      console.log(stdout)
-    });
+    // // Load initial easyconfig state to device
+    // var exec = require('child_process').exec;
+    // exec(`curl -v ${process.env.HOST}/rci/easyconfig/state -d @util/welcome.json`, function callback(_err, stdout) {
+    //   console.log(stdout)
+    // });
 
    
-    let mocked = 0
-    await page.route('/rci/', async route => {
-    console.log('main')
+    // let mocked = 0
+    // await page.route('/rci/', async route => {
+    // console.log('main')
 
-      if (route.request().method() !== 'POST') {
-        route.continue()
-        return
-      }
+    //   if (route.request().method() !== 'POST') {
+    //     route.continue()
+    //     return
+    //   }
 
-      const response = await route.fetch();
+    //   const response = await route.fetch();
 
-      if (!response.ok()) {
-        route.continue()
-        return
-      }
+    //   if (!response.ok()) {
+    //     route.continue()
+    //     return
+    //   }
 
-      const json = await response.json()
+    //   const json = await response.json()
 
-      if (json.constructor === Array && 'show' in json[0] && 'last-change' in json[0].show) {
-        let root = json[0]['show']['last-change']
+    //   if (json.constructor === Array && 'show' in json[0] && 'last-change' in json[0].show) {
+    //     let root = json[0]['show']['last-change']
 
-        if (mocked < 5) {
-          console.log('Setting agent to default')
-          json[0]['show']['last-change']['agent'] = 'default'
-          mocked++
-        }
-      }
-      await route.fulfill({ response, json });
-    })
+    //     if (mocked < 5) {
+    //       console.log('Setting agent to default')
+    //       json[0]['show']['last-change']['agent'] = 'default'
+    //       mocked++
+    //     }
+    //   }
+    //   await route.fulfill({ response, json });
+    // })
 
     await use(page)
   },
