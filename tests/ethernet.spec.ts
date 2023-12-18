@@ -111,7 +111,7 @@ test.afterEach('common-end', async ({
     // Device will now reboot
 })
 
-test('NoModemNoStbNoVlanNoVlanIptvWifiDef @master', async ({ unplugModemPage, tvOptionPage, vlanInformationPage }) => {
+test('NoModemNoStbNoVlanNoVlanIptvWifiDef @master', async ({ tvOptionPage, vlanInformationPage }) => {
   await tvOptionPage.offTheShelfTv.check()
   await tvOptionPage.next(vlanInformationPage)
   await vlanInformationPage.withoutVlan.click()
