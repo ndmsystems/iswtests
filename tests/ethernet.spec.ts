@@ -111,12 +111,15 @@ test.afterEach('common-end', async ({
     // Device will now reboot
 })
 
-test('NoModemNoStbNoVlanNoVlanIptvWifiDef', async ({ unplugModemPage, tvOptionPage, vlanInformationPage }) => {
+test('NoModemNoStbNoVlanNoVlanIptvWifiDef @master', async ({ unplugModemPage, tvOptionPage, vlanInformationPage }) => {
   await tvOptionPage.offTheShelfTv.check()
   await tvOptionPage.next(vlanInformationPage)
   await vlanInformationPage.withoutVlan.click()
+})
 
-  if ((await easyConfig()).ethernetModemScenarioSelected) {
-    await unplugModemPage.iHaveNoModem.click()
-  }
+test('NoModemNoStbNoVlanNoVlanIptvWifiDef @1.63', async ({ unplugModemPage, tvOptionPage, vlanInformationPage }) => {
+  await unplugModemPage.iHaveNoModem.click()
+  await tvOptionPage.offTheShelfTv.check()
+  await tvOptionPage.next(vlanInformationPage)
+  await vlanInformationPage.withoutVlan.click()
 })
