@@ -2,12 +2,11 @@
 import { type Locator, type Page } from '@playwright/test';
 import { Pageable } from '../../util/fixtures';
 import { Base } from '../base';
+import { get } from '../../util/readLocale';
 
 export class UnplugModem extends Base implements Pageable {
   readonly page: Page
   readonly path: string
-
-  readonly password: Locator;
 
   readonly iHaveNoModem: Locator
 
@@ -17,7 +16,7 @@ export class UnplugModem extends Base implements Pageable {
     this.page = page
     this.path = '/unplug-modem'
 
-    this.iHaveNoModem = page.getByRole('button', { name: 'I have no modem' })
+    this.iHaveNoModem = page.getByRole('button', { name: get('isw.buttons.no-modem') })
   }
 }
 

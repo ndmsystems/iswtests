@@ -3,7 +3,10 @@ import { get } from '../util/readLocale'
 
 export class Base {
   async next(page: Pageable) {
-    await page.page.getByRole('button', { name: get('isw.buttons.next') }).click()
+    let nextButton = page.page.getByRole('button', { name: get('isw.buttons.next') })
+
+    await nextButton.waitFor()
+    await nextButton.click()
     await page.page.waitForURL(new RegExp(page.path))
   }
 }

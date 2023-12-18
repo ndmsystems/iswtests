@@ -19,6 +19,7 @@ export class Welcome implements Pageable {
   }
 
   async runWizard(page: Pageable) {
+    await this.runWizardButton.waitFor()
     await this.runWizardButton.click()
     await this.page.waitForURL(new RegExp(page.path))
   }

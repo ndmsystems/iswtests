@@ -1,5 +1,7 @@
 import { getCookie } from './authenticate';
 
+const url = `${process.env.HOST}/rci/easyconfig/state`
+
 interface DslConfig {
     mode: string;
     vpi: boolean;
@@ -139,13 +141,13 @@ interface DslConfig {
   export async function easyConfig(): Promise<EasyConfig> {
     console.log('Requesting easyconfig')
 
-    let response = await fetch(`${process.env.HOST}/rci/easyconfig/state`);
+    let response = await fetch(url)
     console.log(response.status)
 
     if (response.status === 401) {
-      response = await fetch(`${process.env.HOST}/rci/easyconfig/state`, {
+      response = await fetch(url, {
         headers: {'Cookie': await getCookie() || ''}
-      });
+      })
     }
 
     let data = await response.json()

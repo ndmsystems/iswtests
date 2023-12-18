@@ -21,6 +21,7 @@ export class TermsAndPrivacy implements Pageable {
   }
 
   async accept(page: Pageable) {
+    await this.acceptButton.waitFor()
     await this.acceptButton.click()
     await this.page.waitForURL(new RegExp(page.path))
   }

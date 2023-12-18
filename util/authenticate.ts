@@ -18,7 +18,7 @@ async function get_request_payload(password: string, host: string): Promise<any>
 }
 
 export async function getCookie() {
-    const payload = await get_request_payload('1234', process.env.HOST);
+    const payload = await get_request_payload('1234', process.env.HOST as string);
 
     const headers: HeadersInit = {
         'Content-Type': 'application/json',

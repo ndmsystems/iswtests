@@ -1,5 +1,6 @@
 
 import { type Locator, type Page } from '@playwright/test';
+import { get } from '../../util/readLocale';
 
 export class AutoUpdate {
   readonly page: Page
@@ -12,7 +13,7 @@ export class AutoUpdate {
     this.page = page
     this.path = '/auto-update'
 
-    this.manualUpdating = page.getByRole('button', { name: 'Manual Updating' })
-    this.enableAutomaticUpdates = page.getByRole('button', { name: 'Enable Automatic Updates' })
+    this.manualUpdating = page.getByRole('button', { name: get('isw.auto-update.manual-update-btn-no-updates') })
+    this.enableAutomaticUpdates = page.getByRole('button', { name: get('isw.auto-update.auto-update-btn') })
   }
 }

@@ -18,6 +18,6 @@ export class TvOption extends Base implements Pageable {
     this.path = '/tv-option'
 
     this.offTheShelfTv = page.getByText(get('isw.tv-option.links.off-the-shelf-tv.title'))
-    this.operatorStb = page.getByText('Operator-branded IPTV STB with custom setup instructions')
+    this.operatorStb = page.getByText(get('isw.tv-option.links.operator-stb.title'))
   }
 }
