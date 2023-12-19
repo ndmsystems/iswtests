@@ -2,12 +2,12 @@ import { easyConfig } from '../util/easyconfig';
 import { test } from '../util/fixtures'
 import { check } from '../util/check'
 
-// let has2_5G = false
+let has2_5G = false
 
-// test.beforeAll(async ({ request }) => {
-//   has2_5G = (await (await request.get(`/ndmConstants.js`, {})).text()).includes('"maxSpeed": 2500')
-//   console.log(`This device ${has2_5G ? 'has' : 'doesn\'t have'} a 2.5G port`)
-// });
+test.beforeAll(async ({ request }) => {
+  has2_5G = (await (await request.get(`/ndmConstants.js`, {})).text()).includes('"maxSpeed": 2500')
+  console.log(`This device ${has2_5G ? 'has' : 'doesn\'t have'} a 2.5G port`)
+});
 
 test.beforeEach('common-start', async ({ 
     page,
@@ -111,13 +111,24 @@ test.afterEach('common-end', async ({
     // Device will now reboot
 })
 
-test('NoModemNoStbNoVlanNoVlanIptvWifiDef @master', async ({ tvOptionPage, vlanInformationPage }) => {
+test('NoModemNoStbNoVlanNoVlanIptvWifiDef @master', async ({
+  selectWanPortPage, tvOptionPage, vlanInformationPage }) => {
+  
+  if (has2_5G) {
+    selectWanPortPage.next(tvOptionPage)
+  }
   await tvOptionPage.offTheShelfTv.check()
   await tvOptionPage.next(vlanInformationPage)
   await vlanInformationPage.withoutVlan.click()
 })
 
-test('NoModemNoStbNoVlanNoVlanIptvWifiDef @1.63', async ({ unplugModemPage, tvOptionPage, vlanInformationPage }) => {
+test('NoModemNoStbNoVlanNoVlanIptvWifiDef @1.63', async ({ 
+  selectWanPortPage, unplugModemPage, tvOptionPage, vlanInformationPage }) => {
+
+  if (has2_5G) {
+    selectWanPortPage.next(unplugModemPage)
+  }
+
   await unplugModemPage.iHaveNoModem.click()
   await tvOptionPage.offTheShelfTv.check()
   await tvOptionPage.next(vlanInformationPage)

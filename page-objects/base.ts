@@ -7,6 +7,8 @@ export class Base {
 
     await nextButton.waitFor()
     await nextButton.click()
+    console.log('next:', page.path)
+
     await page.page.waitForURL(new RegExp(page.path))
   }
 }

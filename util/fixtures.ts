@@ -15,19 +15,21 @@ import { ProductImprovement } from '../page-objects/common-end/product-improveme
 import { YourKeeneticCredentials } from '../page-objects/common-end/your-keenetic-credentials'
 import { Congratulate } from '../page-objects/common-end/congratulate'
 import { A } from '../page-objects/a'
+import { SelectWanPort } from '../page-objects/ethernet-scenario/select-wan-port'
 
 export interface Pageable {
   page: Page
   path: string
 }
 
-interface MyFixtures {
+interface Pages {
   welcomePage: Welcome
   selectConfigurationOptionPage: SelectConfigurationOption
   devicePrivacyNoticePage: DevicePrivacyNotice
   selectCountryOrRegionPage: SelectCountryOrRegion
   termsAndPrivacyPage: TermsAndPrivacy
   passwordPage: Password
+  selectWanPortPage: SelectWanPort
   unplugModemPage: UnplugModem
   tvOptionPage: TvOption
   vlanInformationPage: iptvVlanSetup
@@ -40,7 +42,7 @@ interface MyFixtures {
   a: A
 }
 
-export const test = base.extend<MyFixtures>({
+export const test = base.extend<Pages>({
   page: async ({ page }, use) => {
     page.on('console', msg => {
       if (msg.type() === 'error') {
@@ -118,6 +120,11 @@ export const test = base.extend<MyFixtures>({
   passwordPage: async ({ page }, use) => {
     const pwd = new Password(page)
     await use(pwd)
+  },
+
+  selectWanPortPage: async ({ page }, use) => {
+    const swp = new SelectWanPort(page)
+    await use(swp)
   },
 
   unplugModemPage: async ({ page }, use) => {
