@@ -11,4 +11,15 @@ export class Base {
 
     await page.page.waitForURL(new RegExp(page.path))
   }
+
+  async back(page: Pageable) {
+    let backButton = page.page.getByRole('button', { name: get('isw.buttons.back') })
+
+    await backButton.waitFor()
+    await backButton.click()
+    console.log('back:', page.path)
+
+    await page.page.waitForURL(new RegExp(page.path))
+  }
+
 }

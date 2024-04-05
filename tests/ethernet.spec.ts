@@ -1,6 +1,7 @@
 import { easyConfig } from '../util/easyconfig';
 import { test } from '../util/fixtures'
 import { check } from '../util/check'
+import { pppoeSetup } from '../page-objects/ethernet-scenario/ppoe-setup';
 
 let has2_5G = false
 
@@ -17,6 +18,7 @@ test.beforeEach('common-start', async ({
     selectCountryOrRegionPage,
     termsAndPrivacyPage,
     passwordPage,
+    connectionSelectPage,
      }) => {
   
     let selectCountry = false
@@ -106,6 +108,8 @@ test.afterEach('common-end', async ({
     await yourKeeneticCredentialsPage.next(congratulate)
     await congratulate.finish()
 
+
+
     await page.goto(a.path)
     await a.send('system configuration factory-reset')
     // Device will now reboot
@@ -122,7 +126,30 @@ test('NoModemNoStbNoVlanNoVlanIptvWifiDef @master', async ({
   await vlanInformationPage.withoutVlan.click()
 })
 
-test('NoModemNoStbNoVlanNoVlanIptvWifiDef @1.63', async ({ 
+test('EthPPPoENoModemNoStbNoVlanNoVlanIptvWifiDef @master', async ({
+  selectWanPortPage, tvOptionPage, vlanInformationPage, connectionSelectPage, pppoeSetupPage }) => {
+
+  if (has2_5G) {
+    selectWanPortPage.next(tvOptionPage)
+  }
+  await tvOptionPage.offTheShelfTv.check()
+  await tvOptionPage.next(vlanInformationPage)
+  await vlanInformationPage.withoutVlan.click()
+
+  await vlanInformationPage.next(connectionSelectPage)
+  await connectionSelectPage.connectionTypeCheckbox.check()
+  await connectionSelectPage.next(pppoeSetupPage)
+  //await connectionSelectPage.back(vlanInformationPage)
+  //await vlanInformationPage.withoutVlan.click()
+  //await vlanInformationPage.next(connectionSelectPage)
+
+  //optional: check for special characters in the login and password fields
+  await pppoeSetupPage.pppoeLogin.fill('".|/[|^/$(`%~#/^[|$/,:=)')
+  await pppoeSetupPage.pppoePassword.fill('".|/[|^/$(`%~#/^[|$/,:=)')
+  await pppoeSetupPage.pppoeApplyButton.click()
+})
+
+test('NoModemNoStbNoVlanNoVlanIptvWifiDef @1.63', async ({
   selectWanPortPage, unplugModemPage, tvOptionPage, vlanInformationPage }) => {
 
   if (has2_5G) {

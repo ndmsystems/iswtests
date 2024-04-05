@@ -8,6 +8,8 @@ import { Password } from '../page-objects/common-start/password'
 import { UnplugModem } from '../page-objects/ethernet-scenario/unplug-modem'
 import { TvOption } from '../page-objects/ethernet-scenario/tv-option'
 import { iptvVlanSetup } from '../page-objects/ethernet-scenario/iptv-vlan-setup'
+import {connectionTypeSetup} from '../page-objects/ethernet-scenario/connection-type'
+import { pppoeSetup } from '../page-objects/ethernet-scenario/ppoe-setup'
 import { AutoUpdate } from '../page-objects/common-end/auto-update'
 import { WiFiNetworkSettings } from '../page-objects/common-end/wifi-settings'
 import { DigitalCertificates } from '../page-objects/common-end/digital-certificates'
@@ -33,6 +35,8 @@ interface Pages {
   unplugModemPage: UnplugModem
   tvOptionPage: TvOption
   vlanInformationPage: iptvVlanSetup
+  connectionSelectPage: connectionTypeSetup
+  pppoeSetupPage: pppoeSetup
   autoUpdatePage: AutoUpdate
   wifiSettingsPage: WiFiNetworkSettings
   digitalCertificatesPage: DigitalCertificates
@@ -142,6 +146,15 @@ export const test = base.extend<Pages>({
     await use(vip)
   },
 
+  connectionSelectPage: async ({ page }, use) => {
+    const csp = new connectionTypeSetup(page)
+    await use(csp)
+  },
+
+  pppoeSetupPage: async ({ page }, use) => {
+    const ps = new pppoeSetup(page)
+    await use(ps)
+  },
   autoUpdatePage: async ({ page }, use) => {
     const au = new AutoUpdate(page)
     await use(au)
