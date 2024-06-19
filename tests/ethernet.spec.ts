@@ -1,7 +1,5 @@
-import { easyConfig } from '../util/easyconfig';
-import { test } from '../util/fixtures'
-import { check } from '../util/check'
-import { pppoeSetup } from '../page-objects/ethernet-scenario/ppoe-setup';
+import { check } from '../util/check';
+import { test } from '../util/fixtures';
 
 let has2_5G = false
 
@@ -59,7 +57,7 @@ test.beforeEach('common-start', async ({
           }
         }
       }
-      await route.fulfill({ response, json });
+      await route.continue()
     })
   
   await page.waitForURL(new RegExp(welcomePage.path))
@@ -109,9 +107,8 @@ test.afterEach('common-end', async ({
     await congratulate.finish()
 
 
-
-    await page.goto(a.path)
-    await a.send('system configuration factory-reset')
+    // await page.goto(a.path)
+    // await a.send('system configuration factory-reset')
     // Device will now reboot
 })
 

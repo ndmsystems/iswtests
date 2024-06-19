@@ -6,6 +6,7 @@ export class Base {
     let nextButton = page.page.getByRole('button', { name: get('isw.buttons.next') })
 
     await nextButton.waitFor()
+    await page.page.waitForTimeout(2000)
     await nextButton.click()
     console.log('next:', page.path)
 

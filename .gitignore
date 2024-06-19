@@ -9,7 +9,7 @@ node_modules/
 tests/screenshots/
 
 .env
-
+.vscode
 tmp
 
 util/welcome.json
