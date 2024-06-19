@@ -112,7 +112,7 @@ test.afterEach('common-end', async ({
     // Device will now reboot
 })
 
-test('NoModemNoStbNoVlanNoVlanIptvWifiDef @master', async ({
+test('EthIPoENoModemNoStbNoVlanNoVlanIptvWifiDef @master', async ({
   selectWanPortPage, tvOptionPage, vlanInformationPage }) => {
   
   if (has2_5G) {
@@ -144,17 +144,4 @@ test('EthPPPoENoModemNoStbNoVlanNoVlanIptvWifiDef @master', async ({
   await pppoeSetupPage.pppoeLogin.fill('".|/[|^/$(`%~#/^[|$/,:=)')
   await pppoeSetupPage.pppoePassword.fill('".|/[|^/$(`%~#/^[|$/,:=)')
   await pppoeSetupPage.pppoeApplyButton.click()
-})
-
-test('NoModemNoStbNoVlanNoVlanIptvWifiDef @1.63', async ({
-  selectWanPortPage, unplugModemPage, tvOptionPage, vlanInformationPage }) => {
-
-  if (has2_5G) {
-    selectWanPortPage.next(unplugModemPage)
-  }
-
-  await unplugModemPage.iHaveNoModem.click()
-  await tvOptionPage.offTheShelfTv.check()
-  await tvOptionPage.next(vlanInformationPage)
-  await vlanInformationPage.withoutVlan.click()
 })
