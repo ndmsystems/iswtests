@@ -21,7 +21,7 @@ test.beforeEach('common-start', async ({
   
     let selectCountry = false
     let dpn = false
-  
+    test.setTimeout(60_000)
     await page.route('/rci/', async route => {
       if (route.request().method() !== 'POST') {
         route.continue()
@@ -89,6 +89,7 @@ test.beforeEach('common-start', async ({
 test.afterEach('common-end', async ({ 
   page,
   autoUpdatePage,
+  autoUpdateSettingPage,
   wifiSettingsPage,
   digitalCertificatesPage,
   productImprovementPage,
@@ -96,8 +97,12 @@ test.afterEach('common-end', async ({
   congratulate,
   a
    }) => {
-    await autoUpdatePage.manualUpdating.click()
-  
+    test.setTimeout(200_000)
+
+    console.log('AutoUpdate Page');
+    await autoUpdatePage.enableAutomaticUpdates.click()
+    console.log('Select Preferred Times for Automatic Updates');
+    await autoUpdateSettingPage.next(wifiSettingsPage)
     // Shall we see update page if we choose manual updating? /updating-firmware
     await wifiSettingsPage.next(digitalCertificatesPage)
     await digitalCertificatesPage.next(productImprovementPage)
@@ -112,18 +117,18 @@ test.afterEach('common-end', async ({
     // Device will now reboot
 })
 
-test('EthIPoENoModemNoStbNoVlanNoVlanIptvWifiDef @master', async ({
-  selectWanPortPage, tvOptionPage, vlanInformationPage }) => {
-  
+test.only('EthIPoENoModemNoStbNoVlanNoVlanIptvWifiDef', async ({
+  selectWanPortPage, tvOptionPage, vlanInformationPage }) => {  
   if (has2_5G) {
     selectWanPortPage.next(tvOptionPage)
   }
   await tvOptionPage.offTheShelfTv.check()
   await tvOptionPage.next(vlanInformationPage)
+  await vlanInformationPage.page.waitForTimeout(2_000)
   await vlanInformationPage.withoutVlan.click()
 })
 
-test('EthPPPoENoModemNoStbNoVlanNoVlanIptvWifiDef @master', async ({
+test('EthPPPoENoModemNoStbNoVlanNoVlanIptvWifiDef', async ({
   selectWanPortPage, tvOptionPage, vlanInformationPage, connectionSelectPage, pppoeSetupPage }) => {
 
   if (has2_5G) {

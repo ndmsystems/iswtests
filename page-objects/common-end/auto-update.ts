@@ -15,5 +15,6 @@ export class AutoUpdate {
 
     this.manualUpdating = page.getByRole('button', { name: get('isw.auto-update.manual-update-btn-no-updates') })
     this.enableAutomaticUpdates = page.getByRole('button', { name: get('isw.auto-update.auto-update-btn') })
+    
   }
 }

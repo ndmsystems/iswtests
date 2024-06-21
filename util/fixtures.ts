@@ -1,6 +1,7 @@
 import { Page, test as base } from '@playwright/test'
 import { A } from '../page-objects/a'
 import { AutoUpdate } from '../page-objects/common-end/auto-update'
+import { AutoUpdateSetting } from '../page-objects/common-end/auto-update-setting'
 import { Congratulate } from '../page-objects/common-end/congratulate'
 import { DigitalCertificates } from '../page-objects/common-end/digital-certificates'
 import { ProductImprovement } from '../page-objects/common-end/product-improvement'
@@ -38,6 +39,7 @@ interface Pages {
   connectionSelectPage: connectionTypeSetup
   pppoeSetupPage: pppoeSetup
   autoUpdatePage: AutoUpdate
+  autoUpdateSettingPage: AutoUpdateSetting
   wifiSettingsPage: WiFiNetworkSettings
   digitalCertificatesPage: DigitalCertificates
   productImprovementPage: ProductImprovement
@@ -159,7 +161,10 @@ export const test = base.extend<Pages>({
     const au = new AutoUpdate(page)
     await use(au)
   },
-
+  autoUpdateSettingPage: async ({ page }, use) => {
+    const aus = new AutoUpdateSetting(page)
+    await use(aus)
+  },
   wifiSettingsPage: async ({ page }, use) => {
     const wf = new WiFiNetworkSettings(page)
     await use(wf)
