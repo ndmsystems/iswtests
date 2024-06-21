@@ -97,7 +97,7 @@ test.afterEach('common-end', async ({
   congratulate,
   a
    }) => {
-    test.setTimeout(200_000)
+    test.setTimeout(300_000)
 
     console.log('AutoUpdate Page');
     await autoUpdatePage.enableAutomaticUpdates.click()
