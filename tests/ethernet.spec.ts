@@ -117,14 +117,14 @@ test.afterEach('common-end', async ({
     // Device will now reboot
 })
 
-test.only('EthIPoENoModemNoStbNoVlanNoVlanIptvWifiDef', async ({
+test('EthIPoENoModemNoStbNoVlanNoVlanIptvWifiDef', async ({
   selectWanPortPage, tvOptionPage, vlanInformationPage }) => {  
   if (has2_5G) {
     selectWanPortPage.next(tvOptionPage)
   }
   await tvOptionPage.offTheShelfTv.check()
   await tvOptionPage.next(vlanInformationPage)
-  await vlanInformationPage.page.waitForTimeout(2_000)
+  await vlanInformationPage.page.waitForTimeout(3_000)
   await vlanInformationPage.withoutVlan.click()
 })
 
