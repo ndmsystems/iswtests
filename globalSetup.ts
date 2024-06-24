@@ -8,7 +8,6 @@ export default async (): Promise<void> => {
   dotenv.config()
 
   const ec = await requestEasyConfig()
-  ec.startStep = 'wizards/initial-setup/welcome'
   const prettyEc = JSON.stringify(ec, null, 2);
 
   writeFileSync(join(__dirname, 'util/welcome.json'), prettyEc)
