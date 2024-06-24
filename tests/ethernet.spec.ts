@@ -117,7 +117,7 @@ test.afterEach('common-end', async ({
     // Device will now reboot
 })
 
-test('EthIPoENoModemNoStbNoVlanNoVlanIptvWifiDef', async ({
+test('PwEthIPoENoModemNoStbNoVlanNoVlanIptvWifiDef', async ({
   selectWanPortPage, tvOptionPage, vlanInformationPage }) => {  
   if (has2_5G) {
     selectWanPortPage.next(tvOptionPage)
@@ -128,7 +128,7 @@ test('EthIPoENoModemNoStbNoVlanNoVlanIptvWifiDef', async ({
   await vlanInformationPage.withoutVlan.click()
 })
 
-test('EthPPPoENoModemNoStbNoVlanNoVlanIptvWifiDef', async ({
+test('PwEthPPPoENoModemNoStbNoVlanNoVlanIptvWifiDef', async ({
   selectWanPortPage, tvOptionPage, vlanInformationPage, connectionSelectPage, pppoeSetupPage }) => {
 
   if (has2_5G) {
