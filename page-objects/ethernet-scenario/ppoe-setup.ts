@@ -1,7 +1,6 @@
 import { type Locator, type Page } from '@playwright/test';
-import { Pageable } from './../../util/fixtures'
-import { get } from '../../util/readLocale';
 import { Base } from '../base';
+import { Pageable } from './../../util/fixtures';
 
 export class pppoeSetup extends Base implements Pageable {
   readonly page: Page
@@ -12,7 +11,7 @@ export class pppoeSetup extends Base implements Pageable {
   readonly pppoeApplyButton: Locator
 
   constructor(page: Page) {
-    super()
+    super(page)
 
     this.page = page
     this.path = '/enter-your-credentials-pppoe'

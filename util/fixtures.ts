@@ -19,6 +19,7 @@ import { pppoeSetup } from '../page-objects/ethernet-scenario/ppoe-setup'
 import { SelectWanPort } from '../page-objects/ethernet-scenario/select-wan-port'
 import { TvOption } from '../page-objects/ethernet-scenario/tv-option'
 import { UnplugModem } from '../page-objects/ethernet-scenario/unplug-modem'
+import { loadEasyConfig } from './easyconfig'
 
 export interface Pageable {
   page: Page
@@ -49,49 +50,14 @@ interface Pages {
 }
 
 export const test = base.extend<Pages>({
-  page: async ({ page }, use) => {
+  page: async ({ page, request }, use) => {
     page.on('console', msg => {
       if (msg.type() === 'error') {
-        console.log(msg.text())
+        console.log('CONSOLE ERROR:', msg.text())
       }
     })
 
-    // // Load initial easyconfig state to device
-    // var exec = require('child_process').exec;
-    // exec(`curl -v ${process.env.HOST}/rci/easyconfig/state -d @util/welcome.json`, function callback(_err, stdout) {
-    //   console.log(stdout)
-    // });
-
-   
-    // let mocked = 0
-    // await page.route('/rci/', async route => {
-    // console.log('main')
-
-    //   if (route.request().method() !== 'POST') {
-    //     route.continue()
-    //     return
-    //   }
-
-    //   const response = await route.fetch();
-
-    //   if (!response.ok()) {
-    //     route.continue()
-    //     return
-    //   }
-
-    //   const json = await response.json()
-
-    //   if (json.constructor === Array && 'show' in json[0] && 'last-change' in json[0].show) {
-    //     let root = json[0]['show']['last-change']
-
-    //     if (mocked < 5) {
-    //       console.log('Setting agent to default')
-    //       json[0]['show']['last-change']['agent'] = 'default'
-    //       mocked++
-    //     }
-    //   }
-    //   await route.fulfill({ response, json });
-    // })
+    await loadEasyConfig(page, request)
 
     await use(page)
   },

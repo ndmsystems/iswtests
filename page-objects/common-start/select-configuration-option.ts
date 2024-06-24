@@ -1,8 +1,8 @@
 
 import { type Locator, type Page } from '@playwright/test';
-import { Pageable } from './../../util/fixtures'
 import { get } from '../../util/readLocale';
 import { Base } from '../base';
+import { Pageable } from './../../util/fixtures';
 
 enum Type {
   DEVICES_WITHOUT_VIA_USB_MODEM_OPTION,
@@ -38,7 +38,7 @@ export class SelectConfigurationOption extends Base implements Pageable {
   readonly exitWizard: Locator
 
   constructor(page: Page) {
-    super()
+    super(page)
 
     this.page = page
     this.path = '/select-configuration-option'

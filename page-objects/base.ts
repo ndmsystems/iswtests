@@ -1,26 +1,31 @@
+import { Locator, Page } from '@playwright/test'
 import { Pageable } from '../util/fixtures'
 import { get } from '../util/readLocale'
 
 export class Base {
-  async next(page: Pageable) {
-    let nextButton = page.page.getByRole('button', { name: get('isw.buttons.next') })
+  readonly nextButton: Locator
+  readonly backButton: Locator
 
-    await nextButton.waitFor()
+  constructor(public readonly page: Page) {
+    this.nextButton = this.page.getByRole('button', { name: get('isw.buttons.next') })
+    this.backButton = this.page.getByRole('button', { name: get('isw.buttons.back') })
+  }
+    
+  async next(page: Pageable) {
+    await this.nextButton.waitFor()
     await page.page.waitForTimeout(2000)
-    await nextButton.click()
-    console.log('next:', page.path)
+    await this.nextButton.click()
+    console.log('Clicked "NEXT", expected to go to', page.path)
 
     await page.page.waitForURL(new RegExp(page.path))
+    console.log('Arrived at', page.page.url())
   }
 
   async back(page: Pageable) {
-    let backButton = page.page.getByRole('button', { name: get('isw.buttons.back') })
-
-    await backButton.waitFor()
-    await backButton.click()
-    console.log('back:', page.path)
+    await this.backButton.waitFor()
+    await this.backButton.click()
+    console.log('Clicked "BACK", expected to go to', page.path)
 
     await page.page.waitForURL(new RegExp(page.path))
   }
-
 }

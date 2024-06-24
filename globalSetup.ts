@@ -1,28 +1,18 @@
-import dotenv from 'dotenv'
-import { type FullConfig } from '@playwright/test'
+import dotenv from 'dotenv';
 import { writeFileSync } from 'fs';
 import { join } from 'path';
+import { requestEasyConfig } from './util/easyconfig';
+import { run } from './util/helperFunctions';
 
-async function globalSetup(_config: FullConfig ) {
+export default async (): Promise<void> => {
   dotenv.config()
-  
-  var exec = require('child_process').execSync;
-  let dict = exec(`curl ${process.env.HOST}/language/locale.en.json`)
 
-  writeFileSync(join(__dirname, 'localization/device.en.json'), dict.toString('utf8'), { flag: 'w' })
+  const ec = await requestEasyConfig()
+  ec.startStep = 'wizards/initial-setup/welcome'
+  const prettyEc = JSON.stringify(ec, null, 2);
 
+  writeFileSync(join(__dirname, 'util/welcome.json'), prettyEc)
 
-  // exec(`curl ${process.env.HOST}/rci/easyconfig/state`, function callback(_err, stdout) {
-  //   let obj = JSON.parse(stdout)
-  //   let value = JSON.parse(obj.value)
-  //   value.startStep = 'wizards/initial-setup/welcome'
-    
-  //   let c = {}
-  //   c['value'] = JSON.stringify(value)
-  //   writeFileSync(join(__dirname, 'util/welcome.json'), JSON.stringify(c), {
-  //     flag: 'w',
-  //   });
-  // });
+  let dict = run(`curl ${process.env.HOST}/language/locale.en.json`)
+  writeFileSync(join(__dirname, 'localization/device.en.json'), dict)
 }
-
-export default globalSetup

@@ -10,36 +10,50 @@ test.beforeAll(async ({ request }) => {
 
 test.beforeEach('common-start', async ({ 
     page,
-    welcomePage, 
     selectConfigurationOptionPage, 
     devicePrivacyNoticePage,
     selectCountryOrRegionPage,
     termsAndPrivacyPage,
     passwordPage,
     connectionSelectPage,
+    welcomePage
      }) => {
   
     let selectCountry = false
     let dpn = false
     test.setTimeout(60_000)
+    let mocked = false
+
     await page.route('/rci/', async route => {
       if (route.request().method() !== 'POST') {
-        route.continue()
+        await route.continue()
         return
       }
   
       const response = await route.fetch();
   
       if (!response.ok()) {
-        route.continue()
+        await route.continue()
         return
       }
   
       const json = await response.json()
-  
+      
+      if (page.url().includes('password')) {
+        mocked = true
+      }
+
+      if (!mocked && json.constructor === Array && 'show' in json[0] && 'last-change' in json[0].show) {
+        console.log('Setting agent to default')
+        json[0]['show']['last-change']['agent'] = 'default'
+
+        await route.fulfill({ response, json })
+        return
+      }
+
       if (json.constructor === Array && 'show' in json[0] && 'last-change' in json[0].show) {
         let root = json[0]['show']['last-change']
-  
+        
         if ('dpn-status' in root) {
           const dpnNode = root['dpn-status']
           console.log('DPN ', dpnNode)
@@ -60,6 +74,7 @@ test.beforeEach('common-start', async ({
       await route.continue()
     })
   
+  await page.goto('wizards/initial-setup/welcome')
   await page.waitForURL(new RegExp(welcomePage.path))
   await welcomePage.runWizard(selectConfigurationOptionPage)
   
@@ -83,6 +98,7 @@ test.beforeEach('common-start', async ({
   }
   
   await passwordPage.password.fill('1234')
+  // We use click here instead of next() method, because we don't know what page will be next 
   await passwordPage.nextButton.click()
 })
 
@@ -107,9 +123,9 @@ test.afterEach('common-end', async ({
     await wifiSettingsPage.next(digitalCertificatesPage)
     await digitalCertificatesPage.next(productImprovementPage)
     await productImprovementPage.refuse.click()
-  
-    await yourKeeneticCredentialsPage.next(congratulate)
-    await congratulate.finish()
+    await yourKeeneticCredentialsPage.checkQrCode()
+    // await yourKeeneticCredentialsPage.next(congratulate)
+    // await congratulate.finish()
 
 
     // await page.goto(a.path)

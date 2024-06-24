@@ -1,4 +1,7 @@
+import { APIRequestContext, Page } from '@playwright/test';
+import dotenv from 'dotenv';
 import { getCookie } from './authenticate';
+dotenv.config()
 
 const url = `${process.env.HOST}/rci/easyconfig/state`
 
@@ -138,11 +141,9 @@ interface DslConfig {
     iptvDedicatedPort: string;
   }
 
-  export async function easyConfig(): Promise<EasyConfig> {
-    console.log('Requesting easyconfig')
-
+  export const requestEasyConfig = async (): Promise<EasyConfig> => {
     let response = await fetch(url)
-    console.log(response.status)
+    console.log('Requesting easy config...', response.status)
 
     if (response.status === 401) {
       response = await fetch(url, {
@@ -151,6 +152,53 @@ interface DslConfig {
     }
 
     let data = await response.json()
-    console.log(data.value)
-    return await JSON.parse(data.value)
+    const ec = await JSON.parse(data.value)
+
+    ec.startStep = 'wizards/initial-setup/welcome'
+    return ec
+  }
+
+  export const loadEasyConfig = async (page: Page, request: APIRequestContext): Promise<void> => {
+    let mocked = 0
+    await page.route('/rci/', async route => {
+      console.log('here')
+      if (route.request().method() !== 'POST') {
+        await route.continue()
+        return
+      }
+
+      const response = await route.fetch();
+
+      if (!response.ok()) {
+        await route.continue()
+        return
+      }
+
+      const json = await response.json()
+
+      if (json.constructor === Array && 'show' in json[0] && 'last-change' in json[0].show) {
+        if (mocked < 35) {
+          console.log('Setting agent to default')
+          json[0]['show']['last-change']['agent'] = 'default'
+          mocked++
+        }
+      }
+      await route.fulfill({ response, json });
+    })
+
+    const value = await requestEasyConfig()
+    const toLoad = `{"value":"${JSON.stringify(value).replace(/"/g, '\\"')}"}`
+    const response = await request.post('/rci/easyconfig/state', { data: toLoad })
+
+    if (response.status() !== 200) {
+      const responseAuth = await request.post('/rci/easyconfig/state',
+        {
+          headers: {'Cookie': await getCookie() || ''},
+          data: toLoad
+        }
+      )
+
+      console.log('Response status: ', responseAuth.status())
+    }
+    // console.log(run(`curl ${process.env.HOST}/rci/easyconfig/state -d '${toLoad}'`))
   }

@@ -1,8 +1,8 @@
 
 import { type Locator, type Page } from '@playwright/test';
-import { Pageable } from './../../util/fixtures'
 import { get } from '../../util/readLocale';
 import { Base } from '../base';
+import { Pageable } from './../../util/fixtures';
 
 export class SelectCountryOrRegion extends Base implements Pageable {
   readonly page: Page
@@ -12,7 +12,7 @@ export class SelectCountryOrRegion extends Base implements Pageable {
   readonly timeZone: Locator
 
   constructor(page: Page) {
-    super()
+    super(page)
 
     this.page = page
     this.path = '/select-country-or-region'

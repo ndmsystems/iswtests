@@ -12,7 +12,7 @@ export class Password extends Base implements Pageable  {
   readonly nextButton: Locator
 
   constructor(page: Page) {
-    super()
+    super(page)
 
     this.page = page
     this.path = '/password'

@@ -1,7 +1,7 @@
 
 import { type Locator, type Page } from '@playwright/test';
-import { get } from '../../util/readLocale';
 import { Pageable } from '../../util/fixtures';
+import { get } from '../../util/readLocale';
 import { Base } from '../base';
 
 export class TvOption extends Base implements Pageable {
@@ -12,7 +12,7 @@ export class TvOption extends Base implements Pageable {
   readonly operatorStb: Locator
 
   constructor(page: Page) {
-    super()
+    super(page)
 
     this.page = page
     this.path = '/tv-option'

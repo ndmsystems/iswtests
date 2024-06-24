@@ -1,8 +1,8 @@
 
 import { type Locator, type Page } from '@playwright/test';
 import { Pageable } from '../../util/fixtures';
-import { Base } from '../base';
 import { get } from '../../util/readLocale';
+import { Base } from '../base';
 
 export class WiFiNetworkSettings extends Base implements Pageable {
   readonly page: Page
@@ -12,7 +12,7 @@ export class WiFiNetworkSettings extends Base implements Pageable {
   readonly password: Locator
 
   constructor(page: Page) {
-    super()
+    super(page)
 
     this.page = page
     this.path = '/wifi-settings'
