@@ -19,7 +19,6 @@ export class Password extends Base implements Pageable  {
 
     this.password = page.getByLabel(get('password'))
 
-    this.nextButton = page.getByRole('button', { name: get('isw.buttons.next') })
   }
 }
 
