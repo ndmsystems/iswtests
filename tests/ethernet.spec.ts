@@ -39,17 +39,17 @@ test.beforeEach('common-start', async ({
   
       const json = await response.json()
       
-      if (page.url().includes('password')) {
-        mocked = true
-      }
+      // if (page.url().includes('password')) {
+      //   mocked = true
+      // }
 
-      if (!mocked && json.constructor === Array && 'show' in json[0] && 'last-change' in json[0].show) {
-        console.log('Setting agent to default')
-        json[0]['show']['last-change']['agent'] = 'default'
+      // if (!mocked && json.constructor === Array && 'show' in json[0] && 'last-change' in json[0].show) {
+      //   console.log('Setting agent to default')
+      //   json[0]['show']['last-change']['agent'] = 'default'
 
-        await route.fulfill({ response, json })
-        return
-      }
+      //   await route.fulfill({ response, json })
+      //   return
+      // }
 
       if (json.constructor === Array && 'show' in json[0] && 'last-change' in json[0].show) {
         let root = json[0]['show']['last-change']
