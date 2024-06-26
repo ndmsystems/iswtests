@@ -19,7 +19,6 @@ import { pppoeSetup } from '../page-objects/ethernet-scenario/ppoe-setup'
 import { SelectWanPort } from '../page-objects/ethernet-scenario/select-wan-port'
 import { TvOption } from '../page-objects/ethernet-scenario/tv-option'
 import { UnplugModem } from '../page-objects/ethernet-scenario/unplug-modem'
-import { loadEasyConfig } from './easyconfig'
 
 export interface Pageable {
   page: Page
@@ -57,7 +56,7 @@ export const test = base.extend<Pages>({
       }
     })
 
-    await loadEasyConfig(page, request)
+    // await loadEasyConfig(page, request)
 
     await use(page)
   },
