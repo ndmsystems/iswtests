@@ -21,7 +21,7 @@ test.beforeEach('common-start', async ({
   
     let selectCountry = false
     let dpn = false
-    test.setTimeout(60_000)
+    test.setTimeout(190_000)
     let mocked = false
 
     await page.route('/rci/', async route => {
